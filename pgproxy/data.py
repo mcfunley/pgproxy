@@ -6,9 +6,9 @@ unnecessary logic in it.
 """
 import struct
 
-
-_fmt_int32 = struct._compile('!I')
-_fmt_int16 = struct._compile('!H')
+struct_compile = getattr(struct, 'Struct', None) or struct._compile
+_fmt_int32 = struct_compile('!I')
+_fmt_int16 = struct_compile('!H')
 pack_int32 = _fmt_int32.pack
 unpack_int32 = _fmt_int32.unpack
 unpack_int16 = _fmt_int16.unpack
