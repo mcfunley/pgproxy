@@ -56,10 +56,11 @@ class EndToEndMeta(type):
         for k, v in dct.items():
             if k.startswith('test') and callable(v):
                 del dct[k]
-                setmethod(dct, k, v, 'pypgsql')
-                setmethod(dct, k, v, 'psyco')
+                if pypgsql is not None:
+                    setmethod(dct, k, v, 'pypgsql')
+                if psycopg2 is not None:
+                    setmethod(dct, k, v, 'psyco')
 
-                dct[k+'_psyco'] = testmethod(k+'_psyco', v, 'psyco')
         return type.__new__(cls, name, bases, dct)
 
 
@@ -82,19 +83,19 @@ class EndToEndTests(unittest.TestCase):
     dbpassword_file = os.path.join(this_dir, 'testpw')
     _dbpassword = None
     
-
-    def setUpClass(self):
+    def previouslyKnownAsSetUpClass(self):
         self.clearLogs()
         self.initializeDatabase()
         self.startPostgres()
 
 
-    def tearDownClass(self):
+    def previouslyKnownAsTearDownClass(self):
         if self.postgresRunning:
             self.pg_ctl('stop')        
 
 
     def setUp(self):
+        self.previouslyKnownAsSetUpClass()
         self.createTestDatabase()
         self.startProxy()
 
@@ -102,6 +103,7 @@ class EndToEndTests(unittest.TestCase):
     def tearDown(self):
         if self.proxy:
             self.proxy.stop()
+        self.previouslyKnownAsTearDownClass()
 
 
     def clearLogs(self):
@@ -275,7 +277,6 @@ class EndToEndTests(unittest.TestCase):
                          conn=c, results=False)
             c.commit()
         self.assertEqual(self.scalar('select count(*) from foo'), 3)
-
 
     def test_rolling_back(self):
         with closing(self.connect()) as c:
