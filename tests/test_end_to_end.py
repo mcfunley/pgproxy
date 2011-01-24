@@ -1,19 +1,26 @@
 from __future__ import with_statement
-from contextlib import closing, contextmanager, nested
-import socket
+from contextlib import closing, contextmanager
 from twisted.trial import unittest
-import commands
 import os
 from twisted.python.procutils import which 
 import subprocess
-import signal
-import time
-import sys
-import psycopg2
-from pyPgSQL import PgSQL as pypgsql
 from pgproxy import _waitForServerUp
 import pgproxy
 
+def _import_psycopg2():
+    try:
+        import psycopg2
+    except ImportError:
+        return None
+    return psycopg2
+def _import_pypgsql():
+    try:
+        from pyPgSQL import PgSQL
+    except ImportError:
+        return None
+    return PgSQL
+psycopg2 = _import_psycopg2()
+pypgsql = _import_pypgsql()
 
 this_dir = os.path.realpath(os.path.dirname(__file__))
 
@@ -25,6 +32,10 @@ def leaving_open(x):
 
 def testmethod(name, f, driver):
     def g(self, *args):
+        if driver == 'psyco' and psycopg2 is None:
+            raise unittest.SkipTest('psycopg2 is not available')
+        elif driver == 'pypgsql' and pypgsql is None:
+            raise unittest.SkipTest('pypgsql is not available')
         self.connect = getattr(self, 'connect_'+driver)
 
         self.execute("begin test '%s'" % name, results=False)
@@ -126,7 +137,7 @@ class EndToEndTests(unittest.TestCase):
         script = os.path.join(this_dir, 'testdb.sql')
         psql = which('psql')
         if not psql:
-            raise SkipTest('Could not locate psql')
+            raise unittest.SkipTest('Could not locate psql')
 
         subprocess.Popen(
             [psql[0], '-U', 'postgres', '-p', str(self.pg_port), '-f', script],
