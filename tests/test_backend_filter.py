@@ -1,6 +1,4 @@
 from corefilter import FilterTest
-from pgproxy.filters import BackendFilter
-from pgproxy.proxy import PostgresClientProtocol
 from pgproxy import messages
 
 

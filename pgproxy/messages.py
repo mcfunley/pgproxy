@@ -11,7 +11,6 @@ http://developer.postgresql.org/pgdocs/postgres/protocol-message-formats.html
 """
 from fifobuffer import FIFOBuffer
 from data import pack_int32
-from twisted.python import log
 
 
 # constant values

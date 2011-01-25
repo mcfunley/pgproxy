@@ -6,8 +6,7 @@ messages alone.
 Each protocol instance is generally associated with one filter instance. 
 
 """
-from twisted.internet import reactor, defer
-from twisted.internet.defer import Deferred
+from twisted.internet import reactor
 from twisted.python import log
 import messages
 import re

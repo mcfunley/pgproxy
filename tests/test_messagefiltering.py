@@ -1,7 +1,7 @@
 from twisted.trial import unittest
 from pgproxy.protocol import MessageProtocol, FilteringProtocol
 from pgproxy.filters import Filter
-from twisted.internet import reactor, defer
+from twisted.internet import defer
 from twisted.internet.defer import Deferred
 from twisted.internet.base import DelayedCall
 

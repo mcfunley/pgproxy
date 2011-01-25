@@ -1,6 +1,5 @@
 from corefilter import FilterTest
 from twisted.internet.defer import Deferred
-from twisted.internet import defer
 from pgproxy import messages
 from pgproxy.filters import FrontendFilter
 

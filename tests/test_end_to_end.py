@@ -202,7 +202,7 @@ class EndToEndTests(unittest.TestCase):
         if not c:
             return False
 
-        p = subprocess.Popen(
+        subprocess.Popen(
             [c, op, '-D', self.data_dir, '-l', self.pglog, 
              '-o', '"-p %s"' % str(self.pg_port)],
             stdout=subprocess.PIPE)

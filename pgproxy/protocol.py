@@ -12,10 +12,9 @@ They are:
 
 """
 from __future__ import with_statement
-from twisted.internet import reactor, protocol, defer
-from twisted.internet.defer import Deferred, DeferredList
+from twisted.internet import protocol
+from twisted.internet.defer import DeferredList
 from twisted.python import log
-from messages import Message
 
 
 

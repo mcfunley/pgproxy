@@ -1,5 +1,4 @@
-from data import *
-
+from data import unpack_int16_from, unpack_int32_from
 
 class FIFOBuffer(object):
     """
