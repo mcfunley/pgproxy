@@ -217,6 +217,9 @@ class PGProxyProtocol(FilteringProtocol):
     def connectionLost(self, reason=protocol.connectionDone):
         log.msg('PGProxyProtocol connection lost')
         if self.postgresProtocol:
+            #  HACK: Rollback savepoints on disconnect
+            if self == self.postgresProtocol.currentClient():
+                self.filter.cleanUpSavepoints()
             self.postgresProtocol.detachClient(self)
 
 

@@ -249,6 +249,17 @@ class FrontendFilter(Filter):
         return self.no_match
 
 
+    def cleanUpSavepoints(self):
+        if not self.protocol.inTest():
+            return
+        if self.savepoints:
+            self.protocol.writePeer(
+                [messages.query('ROLLBACK TO SAVEPOINT %s -- cleanup' % (sp,))
+                 for sp in reversed(self.savepoints)])
+            del self.savepoints[:]
+            self._ignoreBackendMessages('CZ')
+
+
     def translateSavepoint(self, msg, sqlFormat):
         """
         Replaces the msg in the stream with a savepoint operation, and causes
