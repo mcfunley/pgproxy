@@ -204,7 +204,7 @@ class EndToEndTests(unittest.TestCase):
 
         subprocess.Popen(
             [c, op, '-D', self.data_dir, '-l', self.pglog, 
-             '-o', '"-p %s"' % str(self.pg_port)],
+             '-o', '"-p %s" "-c" "log_statement=all"' % str(self.pg_port)],
             stdout=subprocess.PIPE)
         return self.waitForServerUp('postgres', self.pg_port)
 
